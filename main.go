@@ -35,6 +35,12 @@ func main() {
 	router.HandleFunc("/user-user", c.Authenticate(c.GetUserProfile, 1)).Methods("GET")
 	router.HandleFunc("/user-user", c.Authenticate(c.EditProfile, 1)).Methods("PUT")
 
+	// Drink's Controller - Admin
+	router.HandleFunc("/drink-admin", c.Authenticate(c.GetDrinks, 0)).Methods("GET")
+	router.HandleFunc("/drink-admin", c.Authenticate(c.AddDrinks, 0)).Methods("POST")
+	router.HandleFunc("/drink-admin", c.Authenticate(c.DeleteDrink, 0)).Methods("DELETE")
+	router.HandleFunc("/drink-admin", c.Authenticate(c.UpdateDrink, 0)).Methods("PUT")
+
 	// Connection Notif
 	http.Handle("/", router)
 	log.Println("Connected to port 8080")

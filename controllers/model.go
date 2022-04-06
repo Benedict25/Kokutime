@@ -43,8 +43,22 @@ type Drink struct {
 	Price       int    `json:"price"`
 	Description string `json:"description"`
 }
+
 type DrinksResponse struct {
 	Status  int     `json:"status"`
 	Message string  `json:"message"`
 	Data    []Drink `json:"data"`
+}
+
+type PromoCode struct {
+	Id_PromoCode     int `json:"id"`
+	Minimal_Purchase int `json:"minimal_purchase"`
+	Promo_Amount     int `json:"promo_amount"`
+	Quantity         int `json:"quantity"`
+}
+
+type PromoCodeResponse struct {
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    []PromoCode `json:"data"`
 }
