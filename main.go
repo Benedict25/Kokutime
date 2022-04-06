@@ -47,6 +47,11 @@ func main() {
 	router.HandleFunc("/promo-code-admin", c.Authenticate(c.DeletePromoCode, 0)).Methods("DELETE")
 	router.HandleFunc("/promo-code-admin", c.Authenticate(c.UpdatePromoCode, 0)).Methods("PUT")
 
+	//Drink
+	router.HandleFunc("/drink-user", c.SeeDrinks).Methods("GET")
+	router.HandleFunc("/drink-detail-user", c.SeeDetailedDrinks).Methods("GET")
+
+
 	// Connection Notif
 	http.Handle("/", router)
 	log.Println("Connected to port 8080")
