@@ -36,3 +36,27 @@ type UsersResponse struct {
 	Message string `json:"message"`
 	Data    []User `json:"data"`
 }
+
+type Drink struct {
+	Id_Drink    int    `json:"id"`
+	Name        string `json:"name"`
+	Price       int    `json:"price"`
+	Description string `json:"description"`
+}
+
+type DrinkResponse struct {
+	Status  int     `json:"status"`
+	Message string  `json:"message"`
+	Data    []Drink `json:"data"`
+}
+type PromoCode struct {
+	Id_PromoCode     int `json:"id"`
+	Minimal_Purchase int `json:"minimal_purchase"`
+	Promo_Amount     int `json:"promo_amount"`
+	Quantity         int `json:"quantity"`
+}
+type PromoCodeResponse struct {
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    []PromoCode `json:"data"`
+}
