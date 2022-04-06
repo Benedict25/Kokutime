@@ -36,3 +36,15 @@ type UsersResponse struct {
 	Message string `json:"message"`
 	Data    []User `json:"data"`
 }
+
+type Drink struct {
+	Id_Drink    int    `json:"id"`
+	Name        string `json:"name"`
+	Price       int    `json:"price"`
+	Description string `json:"description"`
+}
+type DrinksResponse struct {
+	Status  int     `json:"status"`
+	Message string  `json:"message"`
+	Data    []Drink `json:"data"`
+}
