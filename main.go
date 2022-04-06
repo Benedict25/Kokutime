@@ -32,6 +32,8 @@ func main() {
 
 	// User Controller
 	router.HandleFunc("/user-admin", c.Authenticate(c.GetUsers, 0)).Methods("GET")
+	router.HandleFunc("/user-user", c.Authenticate(c.GetUserProfile, 1)).Methods("GET")
+	router.HandleFunc("/user-user", c.Authenticate(c.EditProfile, 1)).Methods("PUT")
 
 	// Connection Notif
 	http.Handle("/", router)
