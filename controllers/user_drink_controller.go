@@ -10,7 +10,7 @@ func SeeDrinks(w http.ResponseWriter, r *http.Request) {
 
 	db := connect()
 	defer db.Close()
-	query := "SELECT * FROM drinks"
+	query := "SELECT * FROM drinks WHERE name LIKE 're%'"
 
 	rows, err := db.Query(query)
 	if err != nil {
