@@ -47,10 +47,13 @@ func main() {
 	router.HandleFunc("/promo-code-admin", c.Authenticate(c.DeletePromoCode, 0)).Methods("DELETE")
 	router.HandleFunc("/promo-code-admin", c.Authenticate(c.UpdatePromoCode, 0)).Methods("PUT")
 
-	//Drink
-	router.HandleFunc("/drink-user", c.SeeDrinks).Methods("GET")
-	router.HandleFunc("/drink-detail-user", c.SeeDetailedDrinks).Methods("GET")
+	// Drink Controller - User
+	router.HandleFunc("/drink-user", c.Authenticate(c.SeeDrinks, 1)).Methods("GET")
+	router.HandleFunc("/drink-detail-user", c.Authenticate(c.SeeDetailedDrinks, 1)).Methods("GET")
 
+	// Checkout Controller
+	router.HandleFunc("/checkout-user", c.Authenticate(c.GetTotalPrice, 1)).Methods("GET")
+	router.HandleFunc("/checkout-user", c.Authenticate(c.Checkout, 1)).Methods("POST")
 
 	// Connection Notif
 	http.Handle("/", router)

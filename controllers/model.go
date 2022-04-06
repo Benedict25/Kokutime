@@ -62,3 +62,10 @@ type PromoCodesResponse struct {
 	Message string      `json:"message"`
 	Data    []PromoCode `json:"data"`
 }
+
+type DetailedCarts struct {
+	Id_Detailed_Cart int    `json:"id_detailed_cart"`
+	Id_Cart          string `json:"id_cart"`
+	Id_Drink         string `json:"id_drink"`
+	Quantity         string `json:"quantity"`
+}
