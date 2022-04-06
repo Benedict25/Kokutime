@@ -57,7 +57,7 @@ type PromoCode struct {
 	Quantity         int `json:"quantity"`
 }
 
-type PromoCodeResponse struct {
+type PromoCodesResponse struct {
 	Status  int         `json:"status"`
 	Message string      `json:"message"`
 	Data    []PromoCode `json:"data"`
