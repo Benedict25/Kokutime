@@ -29,7 +29,7 @@ func GetDrinks(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		var response DrinkResponse
+		var response DrinksResponse
 		if err == nil {
 			response.Status = 200
 			response.Message = "Get Drinks Success"
@@ -57,7 +57,7 @@ func GetDrinks(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		var response DrinkResponse
+		var response DrinksResponse
 		if err == nil {
 			response.Status = 200
 			response.Message = "Get Drinks Success"
