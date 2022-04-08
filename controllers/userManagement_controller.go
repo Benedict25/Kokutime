@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -84,8 +83,8 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	idUser := r.URL.Query()["id_user"]
-	fmt.Println(idUser[0])
 
+	db.Exec("DELETE FROM carts WHERE id_user=?", idUser[0])
 	result, errQuery := db.Exec("DELETE FROM users WHERE id_user=?", idUser[0])
 
 	if errQuery != nil {
