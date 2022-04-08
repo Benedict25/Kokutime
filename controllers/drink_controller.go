@@ -12,62 +12,39 @@ func GetDrinks(w http.ResponseWriter, r *http.Request) {
 	idDrink := r.URL.Query()["id_drink"]
 	drinkName := r.URL.Query()["name"]
 
-	if idDrink == nil {
-		query := "SELECT * FROM drinks WHERE name LIKE '" + drinkName[0] + "%'"
-		rows, err := db.Query(query)
-		CheckError(err)
+	query := "SELECT * FROM drinks"
 
-		var drink Drink
-		var drinks []Drink
-		for rows.Next() {
-			if err := rows.Scan(&drink.Id_Drink, &drink.Name, &drink.Price, &drink.Description); err != nil {
-				PrintError(400, "No User Data Inserted To []User", w)
-				log.Fatal(err)
-				return
-			} else {
-				drinks = append(drinks, drink)
-			}
-		}
+	if len(drinkName[0]) > 0 {
+		query += " WHERE name LIKE '%" + drinkName[0] + "%'"
+	} else if len(idDrink[0]) > 0 {
+		query += " WHERE id_drink = " + idDrink[0]
+	}
 
-		var response DrinksResponse
-		if err == nil {
-			response.Status = 200
-			response.Message = "Get Drinks Success"
-			response.Data = drinks
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(response)
-		} else {
-			PrintError(400, "No Data Found", w)
+	rows, err := db.Query(query)
+	CheckError(err)
+
+	var drink Drink
+	var drinks []Drink
+	for rows.Next() {
+		if err := rows.Scan(&drink.Id_Drink, &drink.Name, &drink.Price, &drink.Description); err != nil {
+			PrintError(400, "No User Data Inserted To []User", w)
+			log.Fatal(err)
 			return
+		} else {
+			drinks = append(drinks, drink)
 		}
+	}
+
+	var response DrinksResponse
+	if err == nil {
+		response.Status = 200
+		response.Message = "Get Drinks Success"
+		response.Data = drinks
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
 	} else {
-		query := "SELECT * FROM drinks WHERE id_drink = " + idDrink[0]
-		rows, err := db.Query(query)
-		CheckError(err)
-
-		var drink Drink
-		var drinks []Drink
-		for rows.Next() {
-			if err := rows.Scan(&drink.Id_Drink, &drink.Name, &drink.Price, &drink.Description); err != nil {
-				PrintError(400, "No User Data Inserted To []User", w)
-				log.Fatal(err)
-				return
-			} else {
-				drinks = append(drinks, drink)
-			}
-		}
-
-		var response DrinksResponse
-		if err == nil {
-			response.Status = 200
-			response.Message = "Get Drinks Success"
-			response.Data = drinks
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(response)
-		} else {
-			PrintError(400, "No Data Found", w)
-			return
-		}
+		PrintError(400, "No Data Found", w)
+		return
 	}
 }
 func AddDrinks(w http.ResponseWriter, r *http.Request) {
