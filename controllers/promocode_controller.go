@@ -15,7 +15,7 @@ func GetPromoCode(w http.ResponseWriter, r *http.Request) {
 	query := "SELECT * FROM promos "
 
 	//kalau jumlah promo code lebih dari 1 maka akan meminta id promo code yang lebih spesifik
-	if len(idPromoCode) > 0 {
+	if len(idPromoCode[0]) > 0 {
 		query += "WHERE id_promo = " + idPromoCode[0]
 	}
 	row, err := db.Query(query)
