@@ -30,12 +30,11 @@ func main() {
 	// Logout
 	router.HandleFunc("/logout", c.Logout).Methods("POST")
 
-	// User Controller
-	router.HandleFunc("/user-admin", c.Authenticate(c.GetUsers, 0)).Methods("GET")
+	// User Controller - User
 	router.HandleFunc("/user-user", c.Authenticate(c.GetUserProfile, 1)).Methods("GET")
 	router.HandleFunc("/user-user", c.Authenticate(c.EditProfile, 1)).Methods("PUT")
 
-	// Drink's Controller - Admin
+	// Drink Controller - Admin
 	router.HandleFunc("/drink-admin", c.Authenticate(c.GetDrinks, 0)).Methods("GET")
 	router.HandleFunc("/drink-admin", c.Authenticate(c.AddDrinks, 0)).Methods("POST")
 	router.HandleFunc("/drink-admin", c.Authenticate(c.DeleteDrink, 0)).Methods("DELETE")
@@ -51,9 +50,14 @@ func main() {
 	router.HandleFunc("/drink-user", c.Authenticate(c.SeeDrinks, 1)).Methods("GET")
 	router.HandleFunc("/drink-detail-user", c.Authenticate(c.SeeDetailedDrinks, 1)).Methods("GET")
 
-	// Checkout Controller
+	// Checkout Controller - User
 	router.HandleFunc("/checkout-user", c.Authenticate(c.GetTotalPrice, 1)).Methods("GET")
 	router.HandleFunc("/checkout-user", c.Authenticate(c.Checkout, 1)).Methods("POST")
+
+	// User Controller - Admin
+	router.HandleFunc("/user-admin", c.Authenticate(c.SeeUsers, 0)).Methods("GET")
+	router.HandleFunc("/user-admin", c.Authenticate(c.UpdateUser, 0)).Methods("PUT")
+	router.HandleFunc("/user-admin", c.Authenticate(c.DeleteUser, 0)).Methods("DELETE")
 
 	// Connection Notif
 	http.Handle("/", router)
