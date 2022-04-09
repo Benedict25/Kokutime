@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func SeeCart(w http.ResponseWriter, r *http.Request) {
@@ -57,4 +58,60 @@ func SeeCart(w http.ResponseWriter, r *http.Request) {
 		PrintError(400, "No Detail Transaction In []detailTransactions", w)
 		return
 	}
+}
+func InsertCart(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		return
+	}
+
+	id_drink := r.Form.Get("id_drink")
+	quantity := r.Form.Get("quantity")
+
+	var userCart UserCart
+	var userCarts []UserCart
+
+	rows, err := db.Query(`SELECT detailed_carts.id_detailed_cart, detailed_carts.id_cart, detailed_carts.id_drink, detailed_carts.quantity 
+	FROM detailed_carts 
+	JOIN carts 
+	ON detailed_carts.id_cart=carts.id_cart 
+	WHERE carts.id_user =?`, onlineId)
+
+	for rows.Next() {
+		if err := rows.Scan(&userCart.idDetailedCart, &userCart.idCart, &userCart.idDrink, &userCart.quantity); err != nil {
+			log.Fatal(err.Error())
+			PrintError(400, "No Product Data Inserted To []Product", w)
+		} else {
+			userCarts = append(userCarts, userCart)
+		}
+	}
+
+	id_drink_int, _ := strconv.Atoi(id_drink)
+	isFound := false
+
+	for i := 0; i < len(userCarts); i++ {
+		if userCarts[i].idDrink == id_drink_int {
+			_, errQuery := db.Exec("UPDATE detailed_carts SET quantity = quantity + "+quantity+" WHERE id_detailed_cart = ? ", userCarts[i].idDetailedCart)
+			isFound = true
+			if errQuery == nil {
+				PrintSuccess(200, "Added To Cart", w)
+			} else {
+				PrintError(400, "Failed", w)
+			}
+			return
+		}
+	}
+	if isFound != true {
+		_, errQuery := db.Exec("INSERT INTO detailed_carts(id_cart, id_drink, quantity) VALUES (?,?,?)", userCarts[0].idCart, id_drink, quantity)
+
+		if errQuery == nil {
+			PrintSuccess(200, "Added To Cart", w)
+		} else {
+			PrintError(400, "Failed", w)
+		}
+	}
+
 }
