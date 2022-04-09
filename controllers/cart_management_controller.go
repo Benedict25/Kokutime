@@ -138,3 +138,23 @@ func UpdateQuantity(w http.ResponseWriter, r *http.Request) {
 		PrintError(400, "Update Failed", w)
 	}
 }
+func DeleteCart(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	id_drink := r.URL.Query()["id_drink"]
+
+	_, errQuery := db.Exec(`DELETE detailed_carts
+	FROM detailed_carts 
+	JOIN carts
+	ON detailed_carts.id_cart = carts.id_cart 
+	WHERE detailed_carts.id_drink = ?
+	AND carts.id_user =?`, id_drink[0], onlineId)
+
+	if errQuery == nil {
+		PrintSuccess(200, "Delete Success", w)
+	} else {
+		PrintError(400, "Delete Failed", w)
+	}
+
+}
