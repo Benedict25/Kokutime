@@ -59,6 +59,12 @@ func main() {
 	router.HandleFunc("/user-admin", c.Authenticate(c.UpdateUser, 0)).Methods("PUT")
 	router.HandleFunc("/user-admin", c.Authenticate(c.DeleteUser, 0)).Methods("DELETE")
 
+	//ShoppingCartManagement
+	router.HandleFunc("/cart-user", c.Authenticate(c.SeeCart, 1)).Methods("GET")
+	router.HandleFunc("/cart-user", c.Authenticate(c.InsertCart, 1)).Methods("POST")
+	router.HandleFunc("/cart-user", c.Authenticate(c.UpdateQuantity, 1)).Methods("PUT")
+	router.HandleFunc("/cart-user", c.Authenticate(c.DeleteCart, 1)).Methods("DELETE")
+
 	// Connection Notif
 	http.Handle("/", router)
 	log.Println("Connected to port 8080")
