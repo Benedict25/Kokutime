@@ -81,7 +81,7 @@ func InsertCart(w http.ResponseWriter, r *http.Request) {
 	WHERE carts.id_user =?`, onlineId)
 
 	for rows.Next() {
-		if err := rows.Scan(&userCart.idDetailedCart, &userCart.idCart, &userCart.idDrink, &userCart.quantity); err != nil {
+		if err := rows.Scan(&userCart.IdDetailedCart, &userCart.IdCart, &userCart.IdDrink, &userCart.Quantity); err != nil {
 			log.Fatal(err.Error())
 			PrintError(400, "No Product Data Inserted To []Product", w)
 		} else {
@@ -93,8 +93,8 @@ func InsertCart(w http.ResponseWriter, r *http.Request) {
 	isFound := false
 
 	for i := 0; i < len(userCarts); i++ {
-		if userCarts[i].idDrink == id_drink_int {
-			_, errQuery := db.Exec("UPDATE detailed_carts SET quantity = quantity + "+quantity+" WHERE id_detailed_cart = ? ", userCarts[i].idDetailedCart)
+		if userCarts[i].IdDrink == id_drink_int {
+			_, errQuery := db.Exec("UPDATE detailed_carts SET quantity = quantity + "+quantity+" WHERE id_detailed_cart = ? ", userCarts[i].IdDetailedCart)
 			isFound = true
 			if errQuery == nil {
 				PrintSuccess(200, "Added To Cart", w)
@@ -105,7 +105,7 @@ func InsertCart(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if isFound != true {
-		_, errQuery := db.Exec("INSERT INTO detailed_carts(id_cart, id_drink, quantity) VALUES (?,?,?)", userCarts[0].idCart, id_drink, quantity)
+		_, errQuery := db.Exec("INSERT INTO detailed_carts(id_cart, id_drink, quantity) VALUES (?,?,?)", userCarts[0].IdCart, id_drink, quantity)
 
 		if errQuery == nil {
 			PrintSuccess(200, "Added To Cart", w)
