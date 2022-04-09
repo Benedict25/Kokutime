@@ -115,3 +115,26 @@ func InsertCart(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+func UpdateQuantity(w http.ResponseWriter, r *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		return
+	}
+
+	id_drink := r.Form.Get("id_drink")
+	quantity := r.Form.Get("quantity")
+	_, errQuery := db.Exec(`UPDATE detailed_carts 
+	JOIN carts 
+	ON detailed_carts.id_cart = carts.id_cart 
+	SET detailed_carts.quantity = detailed_carts.quantity + `+quantity+` 
+	WHERE detailed_carts.id_drink =? AND carts.id_user =?`, id_drink, onlineId)
+
+	if errQuery == nil {
+		PrintSuccess(200, "Updated Quantity", w)
+	} else {
+		PrintError(400, "Update Failed", w)
+	}
+}
