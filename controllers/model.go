@@ -69,3 +69,21 @@ type DetailedCarts struct {
 	Id_Drink         string `json:"id_drink"`
 	Quantity         string `json:"quantity"`
 }
+type Cart struct {
+	IdCart	int `json:"idCart"`
+	IdUser	int `json:"idUser"`
+}
+type DetailCart struct {
+	idDetailedCart	int     	`json:"ID"`
+	DrinkData		Drink   	`json:"User"`
+	Quantity  	    int     	`json:"Quantity"`
+}
+type DetailCartsResponse struct {
+	Data []DetailCart `json:"data"`
+}
+type UserCart struct{
+	idDetailedCart		int		`json:"ID"`	
+	idCart				int		`json:"idCart`
+	idDrink				int		`json:"idDrink"`
+	quantity			int		`json:"quantity"`
+}
