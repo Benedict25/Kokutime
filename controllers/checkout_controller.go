@@ -93,8 +93,8 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	WHERE carts.id_user = ?`, onlineId)
 	CheckError(err)
 
-	var detailed_cart DetailedCarts
-	var detailed_carts []DetailedCarts
+	var detailed_cart DetailedCart
+	var detailed_carts []DetailedCart
 	for rows.Next() {
 		if err := rows.Scan(
 			&detailed_cart.Id_Detailed_Cart,
@@ -177,8 +177,7 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		JOIN carts ON detailed_carts.id_cart = carts.id_cart
 		WHERE carts.id_user = ?`, onlineId)
 
-		var text string
-		text = "Received payment: Rp." + strconv.Itoa(totalPrice)
+		text := "Received payment: Rp." + strconv.Itoa(totalPrice)
 		sendMail("cobapbp@gmail.com", "Thanks For Ordering", text)
 
 		PrintSuccess(200, "Checked out", w)

@@ -55,9 +55,7 @@ func SeeOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id_user := r.URL.Query()["id_user"]
-
-	rows, err := db.Query("SELECT * FROM transactions WHERE id_user=?", id_user[0])
+	rows, err := db.Query("SELECT * FROM transactions WHERE id_user=?", onlineId)
 	if err != nil {
 		PrintError(404, "Table Not Found", w)
 		return
@@ -86,9 +84,9 @@ func SeeDetailOrder(w http.ResponseWriter, r *http.Request) {
 	db := connect()
 	defer db.Close()
 
-	var response UserDetailTransactionResponse
-	var detail UserDetailTransaction
-	var details []UserDetailTransaction
+	var response DetailedTransactionResponse
+	var detail DetailedTransaction
+	var details []DetailedTransaction
 
 	err := r.ParseForm()
 	if err != nil {
@@ -107,7 +105,7 @@ func SeeDetailOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for rows.Next() {
-		if err := rows.Scan(&detail.DrinkName, &detail.Quantity); err != nil {
+		if err := rows.Scan(&detail.Drink_Name, &detail.Quantity); err != nil {
 			PrintError(400, "Print Undifined", w)
 			return
 		} else {
@@ -126,7 +124,6 @@ func SeeDetailOrder(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// Sales Report
 func SalesReport(w http.ResponseWriter, r *http.Request) {
 	db := connect()
 	defer db.Close()

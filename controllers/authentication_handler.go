@@ -15,9 +15,9 @@ var tokenName = "token"
 var onlineId = -1
 
 type Claims struct {
-	ID       int    `json:id`
+	ID       int    `json:"id"`
 	Name     string `json:"name"`
-	UserType int    `json:user_type`
+	UserType int    `json:"user_type"`
 	jwt.StandardClaims
 }
 

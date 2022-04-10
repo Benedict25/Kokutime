@@ -35,8 +35,8 @@ func SeeCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var detailCart DetailCart
-	var detailCarts []DetailCart
+	var detailCart DetailedCartDrink
+	var detailCarts []DetailedCartDrink
 	for rows.Next() {
 		if err := rows.Scan(&detailCart.DrinkData.Name,
 			&detailCart.DrinkData.Price,
@@ -48,7 +48,7 @@ func SeeCart(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	var response DetailCartsResponse
+	var response DetailedCartDrinkResponse
 
 	if len(detailCarts) > 0 {
 		response.Data = detailCarts
@@ -71,30 +71,30 @@ func InsertCart(w http.ResponseWriter, r *http.Request) {
 	id_drink := r.Form.Get("id_drink")
 	quantity := r.Form.Get("quantity")
 
-	var userCart UserCart
-	var userCarts []UserCart
+	var detailedCart DetailedCart
+	var detailedCarts []DetailedCart
 
-	rows, err := db.Query(`SELECT detailed_carts.id_detailed_cart, detailed_carts.id_cart, detailed_carts.id_drink, detailed_carts.quantity 
+	rows, _ := db.Query(`SELECT detailed_carts.id_detailed_cart, detailed_carts.id_cart, detailed_carts.id_drink, detailed_carts.quantity 
 	FROM detailed_carts 
 	JOIN carts 
 	ON detailed_carts.id_cart=carts.id_cart 
 	WHERE carts.id_user =?`, onlineId)
 
 	for rows.Next() {
-		if err := rows.Scan(&userCart.IdDetailedCart, &userCart.IdCart, &userCart.IdDrink, &userCart.Quantity); err != nil {
+		if err := rows.Scan(&detailedCart.Id_Detailed_Cart, &detailedCart.Id_Cart, &detailedCart.Id_Drink, &detailedCart.Quantity); err != nil {
 			log.Fatal(err.Error())
 			PrintError(400, "No Product Data Inserted To []Product", w)
 		} else {
-			userCarts = append(userCarts, userCart)
+			detailedCarts = append(detailedCarts, detailedCart)
 		}
 	}
 
 	id_drink_int, _ := strconv.Atoi(id_drink)
 	isFound := false
 
-	for i := 0; i < len(userCarts); i++ {
-		if userCarts[i].IdDrink == id_drink_int {
-			_, errQuery := db.Exec("UPDATE detailed_carts SET quantity = quantity + "+quantity+" WHERE id_detailed_cart = ? ", userCarts[i].IdDetailedCart)
+	for i := 0; i < len(detailedCarts); i++ {
+		if detailedCarts[i].Id_Drink == id_drink_int {
+			_, errQuery := db.Exec("UPDATE detailed_carts SET quantity = quantity + "+quantity+" WHERE id_detailed_cart = ? ", detailedCarts[i].Id_Detailed_Cart)
 			isFound = true
 			if errQuery == nil {
 				PrintSuccess(200, "Added To Cart", w)
@@ -104,8 +104,8 @@ func InsertCart(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if isFound != true {
-		_, errQuery := db.Exec("INSERT INTO detailed_carts(id_cart, id_drink, quantity) VALUES (?,?,?)", userCarts[0].IdCart, id_drink, quantity)
+	if !isFound {
+		_, errQuery := db.Exec("INSERT INTO detailed_carts(id_cart, id_drink, quantity) VALUES (?,?,?)", detailedCarts[0].Id_Cart, id_drink, quantity)
 
 		if errQuery == nil {
 			PrintSuccess(200, "Added To Cart", w)

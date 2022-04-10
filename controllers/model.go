@@ -2,6 +2,7 @@ package controllers
 
 import "time"
 
+// Error Success
 type ErrorResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
@@ -12,6 +13,7 @@ type SuccessResponse struct {
 	Message string `json:"message"`
 }
 
+// Admin & User
 type Admin struct {
 	Id_Admin int    `json:"id"`
 	Name     string `json:"name"`
@@ -39,6 +41,7 @@ type UsersResponse struct {
 	Data    []User `json:"data"`
 }
 
+// Drink
 type Drink struct {
 	Id_Drink    int    `json:"id"`
 	Name        string `json:"name"`
@@ -52,6 +55,7 @@ type DrinksResponse struct {
 	Data    []Drink `json:"data"`
 }
 
+// Promo Code
 type PromoCode struct {
 	Id_PromoCode     int `json:"id"`
 	Minimal_Purchase int `json:"minimal_purchase"`
@@ -65,13 +69,30 @@ type PromoCodesResponse struct {
 	Data    []PromoCode `json:"data"`
 }
 
-type DetailedCarts struct {
-	Id_Detailed_Cart int    `json:"id_detailed_cart"`
-	Id_Cart          string `json:"id_cart"`
-	Id_Drink         string `json:"id_drink"`
-	Quantity         string `json:"quantity"`
+// Cart
+type Cart struct {
+	IdCart int `json:"idCart"`
+	IdUser int `json:"idUser"`
 }
 
+type DetailedCartDrink struct {
+	IdDetailedCart int   `json:"ID"`
+	DrinkData      Drink `json:"User"`
+	Quantity       int   `json:"Quantity"`
+}
+
+type DetailedCartDrinkResponse struct {
+	Data []DetailedCartDrink `json:"data"`
+}
+
+type DetailedCart struct {
+	Id_Detailed_Cart int `json:"id_detailed_cart"`
+	Id_Cart          int `json:"id_cart"`
+	Id_Drink         int `json:"id_drink"`
+	Quantity         int `json:"quantity"`
+}
+
+// Transaction
 type Transaction struct {
 	Id_Transaction int       `json:"id_transaction"`
 	Id_User        int       `json:"id_user"`
@@ -87,35 +108,13 @@ type TransactionResponse struct {
 	Data    []Transaction `json:"data"`
 }
 
-type UserDetailTransaction struct {
-	DrinkName string `json:drink_name"`
-	Quantity  int    `json:"quantity"`
+type DetailedTransaction struct {
+	Drink_Name string `json:"drink_name"`
+	Quantity   int    `json:"quantity"`
 }
 
-type UserDetailTransactionResponse struct {
-	Status  int                     `json:"status"`
-	Message string                  `json:"message"`
-	Data    []UserDetailTransaction `json:"data"`
-}
-
-type Cart struct {
-	IdCart	int `json:"idCart"`
-	IdUser	int `json:"idUser"`
-}
-
-type DetailCart struct {
-	IdDetailedCart	int     	`json:"ID"`
-	DrinkData		Drink   	`json:"User"`
-	Quantity  	    int     	`json:"Quantity"`
-}
-
-type DetailCartsResponse struct {
-	Data []DetailCart `json:"data"`
-}
-
-type UserCart struct{
-	IdDetailedCart		int		`json:"ID"`	
-	IdCart				int		`json:"idCart`
-	IdDrink				int		`json:"idDrink"`
-	Quantity			int		`json:"quantity"`
+type DetailedTransactionResponse struct {
+	Status  int                   `json:"status"`
+	Message string                `json:"message"`
+	Data    []DetailedTransaction `json:"data"`
 }
