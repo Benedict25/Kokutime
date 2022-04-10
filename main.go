@@ -5,7 +5,6 @@ import (
 
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/claudiu/gocron"
 	"github.com/go-redis/redis/v8"
@@ -91,9 +90,7 @@ func main() {
 	c.SetRedis(rdb, "idn", "Inisialisasi", 0)
 
 	gocron.Start()
-	gocron.Every(20).Seconds().Do(c.Task)
-	time.Sleep(30 * time.Second)
-	gocron.Clear()
+	gocron.Every(10).Seconds().Do(c.Task)
 
 	//cors
 	corsHandler := cors.New(cors.Options{
