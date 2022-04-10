@@ -54,6 +54,12 @@ func main() {
 	router.HandleFunc("/checkout-user", c.Authenticate(c.GetTotalPrice, 1)).Methods("GET")
 	router.HandleFunc("/checkout-user", c.Authenticate(c.Checkout, 1)).Methods("POST")
 
+	// Transaction - Admin
+	router.HandleFunc("/transaction-admin", c.Authenticate(c.SalesReport, 0)).Methods("GET")
+	router.HandleFunc("/transaction-admin", c.Authenticate(c.StatusManagement, 0)).Methods("PUT")
+	router.HandleFunc("/transaction-user", c.Authenticate(c.SeeOrder, 1)).Methods("GET")
+	router.HandleFunc("/detail-transaction-user", c.Authenticate(c.SeeDetailOrder, 1)).Methods("GET")
+  
 	// User Controller - Admin
 	router.HandleFunc("/user-admin", c.Authenticate(c.SeeUsers, 0)).Methods("GET")
 	router.HandleFunc("/user-admin", c.Authenticate(c.UpdateUser, 0)).Methods("PUT")

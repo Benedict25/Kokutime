@@ -1,5 +1,7 @@
 package controllers
 
+import "time"
+
 type ErrorResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
@@ -69,18 +71,48 @@ type DetailedCarts struct {
 	Id_Drink         string `json:"id_drink"`
 	Quantity         string `json:"quantity"`
 }
+
+type Transaction struct {
+	Id_Transaction int       `json:"id_transaction"`
+	Id_User        int       `json:"id_user"`
+	Id_Promo       int       `json:"id_promo"`
+	Status         string    `json:"status"`
+	Total          int       `json:"total"`
+	Date           time.Time `json:"date"`
+}
+
+type TransactionResponse struct {
+	Status  int           `json:"status"`
+	Message string        `json:"message"`
+	Data    []Transaction `json:"data"`
+}
+
+type UserDetailTransaction struct {
+	DrinkName string `json:drink_name"`
+	Quantity  int    `json:"quantity"`
+}
+
+type UserDetailTransactionResponse struct {
+	Status  int                     `json:"status"`
+	Message string                  `json:"message"`
+	Data    []UserDetailTransaction `json:"data"`
+}
+
 type Cart struct {
 	IdCart	int `json:"idCart"`
 	IdUser	int `json:"idUser"`
 }
+
 type DetailCart struct {
 	IdDetailedCart	int     	`json:"ID"`
 	DrinkData		Drink   	`json:"User"`
 	Quantity  	    int     	`json:"Quantity"`
 }
+
 type DetailCartsResponse struct {
 	Data []DetailCart `json:"data"`
 }
+
 type UserCart struct{
 	IdDetailedCart		int		`json:"ID"`	
 	IdCart				int		`json:"idCart`
