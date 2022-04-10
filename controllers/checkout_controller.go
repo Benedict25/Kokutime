@@ -177,6 +177,10 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		JOIN carts ON detailed_carts.id_cart = carts.id_cart
 		WHERE carts.id_user = ?`, onlineId)
 
+		var text string
+		text = "Received payment: Rp." + strconv.Itoa(totalPrice)
+		sendMail("cobapbp@gmail.com", "Thanks For Ordering", text)
+
 		PrintSuccess(200, "Checked out", w)
 	} else { // totalPrice < minimalPurchase
 		PrintError(400, "Minimum Purchase Not Fulfilled", w)

@@ -91,8 +91,31 @@ type UserDetailTransaction struct {
 	DrinkName string `json:drink_name"`
 	Quantity  int    `json:"quantity"`
 }
+
 type UserDetailTransactionResponse struct {
 	Status  int                     `json:"status"`
 	Message string                  `json:"message"`
 	Data    []UserDetailTransaction `json:"data"`
+}
+
+type Cart struct {
+	IdCart	int `json:"idCart"`
+	IdUser	int `json:"idUser"`
+}
+
+type DetailCart struct {
+	IdDetailedCart	int     	`json:"ID"`
+	DrinkData		Drink   	`json:"User"`
+	Quantity  	    int     	`json:"Quantity"`
+}
+
+type DetailCartsResponse struct {
+	Data []DetailCart `json:"data"`
+}
+
+type UserCart struct{
+	IdDetailedCart		int		`json:"ID"`	
+	IdCart				int		`json:"idCart`
+	IdDrink				int		`json:"idDrink"`
+	Quantity			int		`json:"quantity"`
 }
