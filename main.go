@@ -11,6 +11,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	_ "github.com/go-sql-driver/mysql" // Connection
 	"github.com/gorilla/mux"           // Router
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -94,8 +95,17 @@ func main() {
 	time.Sleep(30 * time.Second)
 	gocron.Clear()
 
+	//cors
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowCredentials: true,
+	})
+
+	Handler := corsHandler.Handler(router)
+
 	// Connection Notif
 	http.Handle("/", router)
 	log.Println("Connected to port 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8080", Handler))
 }
