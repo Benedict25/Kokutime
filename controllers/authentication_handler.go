@@ -1,16 +1,35 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-redis/redis/v8"
 )
 
 var jwtKey = []byte("!@#123abc")
 var tokenName = "token"
 var onlineId = -1
+
+// ctx (global) for redis
+var ctx = context.Background()
+
+// GoRedis - Set & Get from Redis
+func SetRedis(rdb *redis.Client, key string, value string, expiration int) {
+	err := rdb.Set(ctx, key, value, 0).Err()
+	CheckError(err)
+}
+
+func GetRedis(rdb *redis.Client, key string) string {
+	val, err := rdb.Get(ctx, key).Result()
+
+	CheckError(err)
+	return val
+}
 
 type Claims struct {
 	ID       int    `json:id`
@@ -33,7 +52,17 @@ func generateToken(w http.ResponseWriter, id int, name string, userType int) {
 
 	// Set the now-logged-in-user's id to onlineId for global use
 	onlineId = id
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
 
+	SetRedis(rdb, "onlineId", strconv.Itoa(id), 0)
+	onlineId, _ = strconv.Atoi(GetRedis(rdb, "onlineId"))
+	// Can do onlineId = id -> but not safe
+
+	// Continue Generate Token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString(jwtKey)
 
