@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -14,22 +13,6 @@ import (
 var jwtKey = []byte("!@#123abc")
 var tokenName = "token"
 var onlineId = -1
-
-// ctx (global) for redis
-var ctx = context.Background()
-
-// GoRedis - Set & Get from Redis
-func SetRedis(rdb *redis.Client, key string, value string, expiration int) {
-	err := rdb.Set(ctx, key, value, 0).Err()
-	CheckError(err)
-}
-
-func GetRedis(rdb *redis.Client, key string) string {
-	val, err := rdb.Get(ctx, key).Result()
-
-	CheckError(err)
-	return val
-}
 
 type Claims struct {
 	ID       int    `json:id`
