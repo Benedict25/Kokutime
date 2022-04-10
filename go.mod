@@ -3,6 +3,7 @@ module Kokutime
 go 1.17
 
 require (
+	github.com/claudiu/gocron v0.0.0-20151103142354-980c96bf412b
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.6.0

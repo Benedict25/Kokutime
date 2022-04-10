@@ -178,7 +178,7 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		WHERE carts.id_user = ?`, onlineId)
 
 		text := "Received payment: Rp." + strconv.Itoa(totalPrice)
-		sendMail("cobapbp@gmail.com", "Thanks For Ordering", text)
+		SendMail("cobapbp@gmail.com", "Thanks For Ordering", text)
 
 		PrintSuccess(200, "Checked out", w)
 	} else { // totalPrice < minimalPurchase

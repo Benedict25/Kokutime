@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/go-redis/redis/v8"
 )
 
 func GetDrinks(w http.ResponseWriter, r *http.Request) {
@@ -62,6 +64,13 @@ func AddDrinks(w http.ResponseWriter, r *http.Request) {
 	_, errQuery := db.Exec("INSERT INTO drinks (name, price, description) values (?,?,?)", name, price, description)
 
 	if errQuery == nil {
+		rdb := redis.NewClient(&redis.Options{
+			Addr:     "localhost:6379",
+			Password: "", // no password set
+			DB:       0,  // use default DB
+		})
+		SetRedis(rdb, "eng", "New Drink: "+name, 0)
+		SetRedis(rdb, "idn", "Minuman Baru: "+name, 0)
 		PrintSuccess(200, "Drink Inserted", w)
 	} else {
 		PrintError(400, "insert Drinks Failed", w)

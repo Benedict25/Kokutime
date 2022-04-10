@@ -5,7 +5,10 @@ import (
 
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/claudiu/gocron"
+	"github.com/go-redis/redis/v8"
 	_ "github.com/go-sql-driver/mysql" // Connection
 	"github.com/gorilla/mux"           // Router
 )
@@ -76,6 +79,20 @@ func main() {
 	// Checkout Controller - User
 	router.HandleFunc("/checkout-user", c.Authenticate(c.GetTotalPrice, 1)).Methods("GET")
 	router.HandleFunc("/checkout-user", c.Authenticate(c.Checkout, 1)).Methods("POST")
+
+	// Tools
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+	c.SetRedis(rdb, "eng", "Initialization", 0)
+	c.SetRedis(rdb, "idn", "Inisialisasi", 0)
+
+	gocron.Start()
+	gocron.Every(20).Seconds().Do(c.Task)
+	time.Sleep(30 * time.Second)
+	gocron.Clear()
 
 	// Connection Notif
 	http.Handle("/", router)

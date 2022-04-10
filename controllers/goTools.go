@@ -21,7 +21,7 @@ func GetRedis(rdb *redis.Client, key string) string {
 	return val
 }
 
-func sendMail(to string, subject string, text string) {
+func SendMail(to string, subject string, text string) {
 	gmail := gomail.NewMessage()
 
 	gmail.SetHeader("From", "cobapbp@gmail.com")
@@ -33,4 +33,16 @@ func sendMail(to string, subject string, text string) {
 
 	err := gm.DialAndSend(gmail)
 	CheckError(err)
+}
+
+func Task() {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+	eng := GetRedis(rdb, "eng")
+	idn := GetRedis(rdb, "idn")
+	go SendMail("cobapbp@gmail.com", "Hello From Kokutime - Reminder", eng)
+	SendMail("cobapbp@gmail.com", "Halo Dari Kokutime - Pengingat", idn)
 }
