@@ -51,7 +51,6 @@ func generateToken(w http.ResponseWriter, id int, name string, userType int) {
 	}
 
 	// Set the now-logged-in-user's id to onlineId for global use
-	onlineId = id
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
