@@ -27,7 +27,7 @@ func SeeCart(w http.ResponseWriter, r *http.Request) {
 		query += ` WHERE detailed_carts.Id_Drink = ` + Id_Drink
 	}
 
-	rows, err := db.Query(query, onlineId)
+	rows, err := db.Query(query, GetOnlineUserId(r))
 
 	if err != nil {
 		log.Println(err)
@@ -78,7 +78,7 @@ func InsertCart(w http.ResponseWriter, r *http.Request) {
 	FROM detailed_carts 
 	JOIN carts 
 	ON detailed_carts.id_cart=carts.id_cart 
-	WHERE carts.id_user =?`, onlineId)
+	WHERE carts.id_user =?`, GetOnlineUserId(r))
 
 	for rows.Next() {
 		if err := rows.Scan(&detailedCart.Id_Detailed_Cart, &detailedCart.Id_Cart, &detailedCart.Id_Drink, &detailedCart.Quantity); err != nil {
@@ -130,7 +130,7 @@ func UpdateQuantity(w http.ResponseWriter, r *http.Request) {
 	JOIN carts 
 	ON detailed_carts.id_cart = carts.id_cart 
 	SET detailed_carts.quantity = detailed_carts.quantity + `+quantity+` 
-	WHERE detailed_carts.id_drink =? AND carts.id_user =?`, id_drink, onlineId)
+	WHERE detailed_carts.id_drink =? AND carts.id_user =?`, id_drink, GetOnlineUserId(r))
 
 	if errQuery == nil {
 		PrintSuccess(200, "Updated Quantity", w)
@@ -149,7 +149,7 @@ func DeleteCart(w http.ResponseWriter, r *http.Request) {
 	JOIN carts
 	ON detailed_carts.id_cart = carts.id_cart 
 	WHERE detailed_carts.id_drink = ?
-	AND carts.id_user =?`, id_drink[0], onlineId)
+	AND carts.id_user =?`, id_drink[0], GetOnlineUserId(r))
 
 	if errQuery == nil {
 		PrintSuccess(200, "Delete Success", w)

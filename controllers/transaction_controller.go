@@ -55,7 +55,7 @@ func SeeOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := db.Query("SELECT * FROM transactions WHERE id_user=?", onlineId)
+	rows, err := db.Query("SELECT * FROM transactions WHERE id_user=?", GetOnlineUserId(r))
 	if err != nil {
 		PrintError(404, "Table Not Found", w)
 		return
