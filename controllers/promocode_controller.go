@@ -55,10 +55,10 @@ func AddPromoCode(w http.ResponseWriter, r *http.Request) {
 
 	db := connect()
 	defer db.Close()
+
 	err := r.ParseForm()
-	if err != nil {
-		return
-	}
+	CheckError(err)
+
 	minimalPurchase := r.Form.Get("minimal_purchase")
 	promoAmmount := r.Form.Get("promo_amount")
 	quantity := r.Form.Get("quantity")
@@ -92,9 +92,9 @@ func UpdatePromoCode(w http.ResponseWriter, r *http.Request) {
 	db := connect()
 	defer db.Close()
 	err := r.ParseForm()
-	if err != nil {
-		return
-	}
+
+	CheckError(err)
+
 	idPromoCode := r.Form.Get("id_promo")
 	minimalPurchase := r.Form.Get("minimal_purchase")
 	promoAmmount := r.Form.Get("promo_amount")

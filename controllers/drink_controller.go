@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -52,19 +52,24 @@ func GetDrinks(w http.ResponseWriter, r *http.Request) {
 }
 func AddDrinks(w http.ResponseWriter, r *http.Request) {
 
-	db := connect()
-	defer db.Close()
+	db := connectGorm()
+
 	err := r.ParseForm()
-	if err != nil {
-		return
-	}
+	CheckError(err)
+
 	name := r.Form.Get("name")
 	price := r.Form.Get("price")
 	description := r.Form.Get("description")
 
-	_, errQuery := db.Exec("INSERT INTO drinks (name, price, description) values (?,?,?)", name, price, description)
+	var drink Drink
 
-	if errQuery == nil {
+	drink.Name = name
+	drink.Price, _ = strconv.Atoi(price)
+	drink.Description = description
+
+	query := db.Select("name", "price", "description").Create(&drink)
+
+	if query != nil {
 		rdb := redis.NewClient(&redis.Options{
 			Addr:     "localhost:6379",
 			Password: "", // no password set
@@ -83,12 +88,9 @@ func DeleteDrink(w http.ResponseWriter, r *http.Request) {
 
 	idDrink := r.URL.Query()["id_drink"]
 
-	fmt.Println(idDrink)
-
 	var drink Drink
 
 	err := db.Delete(&drink, idDrink)
-	fmt.Println(err)
 
 	if err != nil {
 		PrintSuccess(200, "Drink Deleted", w)
@@ -100,8 +102,7 @@ func DeleteDrink(w http.ResponseWriter, r *http.Request) {
 }
 func UpdateDrink(w http.ResponseWriter, r *http.Request) {
 
-	db := connect()
-	defer db.Close()
+	db := connectGorm()
 
 	err := r.ParseForm()
 	CheckError(err)
@@ -111,9 +112,14 @@ func UpdateDrink(w http.ResponseWriter, r *http.Request) {
 	price := r.Form.Get("price")
 	description := r.Form.Get("description")
 
-	_, errQuery := db.Exec("UPDATE drinks SET name=?, price=?, description=? WHERE id_drink=?", name, price, description, idDrink)
+	var drink Drink
 
-	if errQuery == nil {
+	drink.Id_Drink, _ = strconv.Atoi(idDrink)
+	priceint, _ := strconv.Atoi(price)
+
+	query := db.Model(&drink).Where("id_drink = ?", idDrink).Updates(Drink{Name: name, Price: priceint, Description: description})
+
+	if query != nil {
 		PrintSuccess(200, "Drink Updated", w)
 	} else {
 		PrintError(400, "Update Drinks Failed", w)
