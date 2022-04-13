@@ -9,7 +9,7 @@ func GetUserProfile(w http.ResponseWriter, r *http.Request) {
 	db := connect()
 	defer db.Close()
 
-	row := db.QueryRow("SELECT * FROM users WHERE id_user = ?", GetUserId(r))
+	row := db.QueryRow("SELECT * FROM users WHERE id_user = ?", GetOnlineUserId(r))
 
 	var user User
 	err := row.Scan(&user.Id_User, &user.Name, &user.Address, &user.Email, &user.Password)
@@ -45,7 +45,7 @@ func EditProfile(w http.ResponseWriter, r *http.Request) {
 		Address,
 		Email,
 		Password,
-		GetUserId(r))
+		GetOnlineUserId(r))
 
 	if errQuery == nil {
 		PrintSuccess(200, "Profile Updated", w)

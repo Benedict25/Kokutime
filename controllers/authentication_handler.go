@@ -94,7 +94,7 @@ func validateTokenFromCookies(r *http.Request) (bool, int, string, int) {
 	return false, -1, "", -1
 }
 
-func GetUserId(r *http.Request) int {
+func GetOnlineUserId(r *http.Request) int {
 	id := GetTokenValue(r)
 	return id
 }
