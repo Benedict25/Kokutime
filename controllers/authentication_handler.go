@@ -3,12 +3,13 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-var jwtKey = []byte("!@#123abc")
+var jwtKey = []byte(os.Getenv("JWT_KEY"))
 var tokenName = "token"
 
 type Claims struct {

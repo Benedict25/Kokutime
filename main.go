@@ -2,6 +2,8 @@ package main
 
 import (
 	c "Kokutime/controllers"
+	"fmt"
+	"os"
 
 	"log"
 	"net/http"
@@ -10,10 +12,12 @@ import (
 	"github.com/go-redis/redis/v8"
 	_ "github.com/go-sql-driver/mysql" // Connection
 	"github.com/gorilla/mux"           // Router
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
 
 func main() {
+	loadEnv()
 
 	// 0 = Admin ; 1 = User
 
@@ -105,4 +109,12 @@ func main() {
 	http.Handle("/", router)
 	log.Println("Connected to port 8080")
 	log.Fatal(http.ListenAndServe(":8080", Handler))
+}
+
+func loadEnv() {
+	err := godotenv.Load()
+	c.CheckError(err)
+
+	appName := os.Getenv("APP_NAME")
+	fmt.Println(appName)
 }
