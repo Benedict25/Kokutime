@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -78,13 +79,18 @@ func AddDrinks(w http.ResponseWriter, r *http.Request) {
 }
 func DeleteDrink(w http.ResponseWriter, r *http.Request) {
 
-	db := connect()
-	defer db.Close()
+	db := connectGorm()
+
 	idDrink := r.URL.Query()["id_drink"]
 
-	_, errQuery := db.Exec("DELETE FROM drinks WHERE id_drink = ?", idDrink[0])
+	fmt.Println(idDrink)
 
-	if errQuery != nil {
+	var drink Drink
+
+	err := db.Delete(&drink, idDrink)
+	fmt.Println(err)
+
+	if err != nil {
 		PrintSuccess(200, "Drink Deleted", w)
 	} else {
 		PrintError(400, "Delete Drink Failed", w)
@@ -96,8 +102,10 @@ func UpdateDrink(w http.ResponseWriter, r *http.Request) {
 
 	db := connect()
 	defer db.Close()
+
 	err := r.ParseForm()
 	CheckError(err)
+
 	idDrink := r.Form.Get("id_drink")
 	name := r.Form.Get("name")
 	price := r.Form.Get("price")
