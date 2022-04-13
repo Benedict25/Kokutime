@@ -17,7 +17,7 @@ func GetTotalPrice(w http.ResponseWriter, r *http.Request) {
 	JOIN detailed_carts ON drinks.id_drink = detailed_carts.id_drink
 	JOIN carts ON detailed_carts.id_cart = carts.id_cart
 	WHERE carts.id_user = ?`,
-		onlineId)
+		GetUserId(r))
 
 	var total int
 	err := row.Scan(&total)
@@ -90,7 +90,7 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	SELECT id_detailed_cart, detailed_carts.id_cart, id_drink, quantity 
 	FROM detailed_carts
 	JOIN carts ON detailed_carts.id_cart = carts.id_cart
-	WHERE carts.id_user = ?`, onlineId)
+	WHERE carts.id_user = ?`, GetUserId(r))
 	CheckError(err)
 
 	var detailed_cart DetailedCart
@@ -110,7 +110,7 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if total price > minimal purchase
-	totalPrice := CalculateTotalPrice(onlineId)
+	totalPrice := CalculateTotalPrice(GetUserId(r))
 
 	var minimalPurchase int
 
@@ -132,7 +132,7 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		if len(id_promo) > 0 { // Inserted promo code in form
 			db.Exec(`
 			INSERT INTO transactions(id_user, id_promo, status, date) 
-			VALUES(?, ?, ?, ?)`, onlineId, id_promo, "Processing", currentTime.Format("2006-01-02"))
+			VALUES(?, ?, ?, ?)`, GetUserId(r), id_promo, "Processing", currentTime.Format("2006-01-02"))
 
 			db.Exec(`
 			UPDATE promos 
@@ -141,14 +141,14 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		} else {
 			db.Exec(`
 			INSERT INTO transactions(id_user, id_promo, status, date) 
-			VALUES(?, ?, ?, ?)`, onlineId, 0, "Processing", "2002-04-01")
+			VALUES(?, ?, ?, ?)`, GetUserId(r), 0, "Processing", "2002-04-01")
 		}
 
 		// Get newest id_transaction for the person
 		rows, err := db.Query(`
 		SELECT id_transaction 
 		FROM transactions 
-		WHERE id_user = ?`, onlineId)
+		WHERE id_user = ?`, GetUserId(r))
 		CheckError(err)
 
 		var id_transaction int
@@ -175,7 +175,7 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		db.Exec(`DELETE detailed_carts
 		FROM detailed_carts 
 		JOIN carts ON detailed_carts.id_cart = carts.id_cart
-		WHERE carts.id_user = ?`, onlineId)
+		WHERE carts.id_user = ?`, GetUserId(r))
 
 		text := "Received payment: Rp." + strconv.Itoa(totalPrice)
 		SendMail("cobapbp@gmail.com", "Thanks For Ordering", text)

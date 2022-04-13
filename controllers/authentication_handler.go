@@ -3,16 +3,13 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/go-redis/redis/v8"
 )
 
 var jwtKey = []byte("!@#123abc")
 var tokenName = "token"
-var onlineId = -1
 
 type Claims struct {
 	ID       int    `json:"id"`
@@ -33,18 +30,6 @@ func generateToken(w http.ResponseWriter, id int, name string, userType int) {
 		},
 	}
 
-	// Set the now-logged-in-user's id to onlineId for global use
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-
-	SetRedis(rdb, "onlineId", strconv.Itoa(id), 0)
-	onlineId, _ = strconv.Atoi(GetRedis(rdb, "onlineId"))
-	// Can do onlineId = id -> but not safe
-
-	// Continue Generate Token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString(jwtKey)
 
@@ -107,4 +92,23 @@ func validateTokenFromCookies(r *http.Request) (bool, int, string, int) {
 		}
 	}
 	return false, -1, "", -1
+}
+
+func GetUserId(r *http.Request) int {
+	id := GetTokenValue(r)
+	return id
+}
+
+func GetTokenValue(r *http.Request) int {
+	if cookie, err := r.Cookie(tokenName); err == nil {
+		accessToken := cookie.Value
+		accessClaims := &Claims{}
+		parsedToken, err := jwt.ParseWithClaims(accessToken, accessClaims, func(accessToken *jwt.Token) (interface{}, error) {
+			return jwtKey, nil
+		})
+		if err == nil && parsedToken.Valid {
+			return accessClaims.ID
+		}
+	}
+	return -1
 }
