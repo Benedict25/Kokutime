@@ -12,8 +12,12 @@ import (
 func GetDrinks(w http.ResponseWriter, r *http.Request) {
 	db := connect()
 	defer db.Close()
+
 	idDrink := r.URL.Query()["id_drink"]
 	drinkName := r.URL.Query()["name"]
+
+	var drink Drink
+	var drinks []Drink
 
 	query := "SELECT * FROM drinks"
 
@@ -26,8 +30,6 @@ func GetDrinks(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query(query)
 	CheckError(err)
 
-	var drink Drink
-	var drinks []Drink
 	for rows.Next() {
 		if err := rows.Scan(&drink.Id_Drink, &drink.Name, &drink.Price, &drink.Description); err != nil {
 			PrintError(400, "No User Data Inserted To []User", w)
