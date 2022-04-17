@@ -52,7 +52,7 @@ func InsertCart(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if !isFound {
+	if isFound == false {
 		_, errQuery := db.Exec("INSERT INTO detailed_carts(id_cart, id_drink, quantity) VALUES (?,?,?)", detailedCarts[0].Id_Cart, id_drink, quantity)
 
 		if errQuery == nil {
@@ -129,8 +129,8 @@ func UpdateQuantity(w http.ResponseWriter, r *http.Request) {
 	_, errQuery := db.Exec(`UPDATE detailed_carts 
 	JOIN carts 
 	ON detailed_carts.id_cart = carts.id_cart 
-	SET detailed_carts.quantity = detailed_carts.quantity + `+quantity+` 
-	WHERE detailed_carts.id_drink =? AND carts.id_user =?`, id_drink, GetOnlineUserId(r))
+	SET detailed_carts.quantity =?   
+	WHERE detailed_carts.id_drink =? AND carts.id_user =?`, quantity, id_drink, GetOnlineUserId(r))
 
 	if errQuery == nil {
 		PrintSuccess(200, "Updated Quantity", w)

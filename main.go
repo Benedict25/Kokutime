@@ -81,7 +81,7 @@ func main() {
 	c.SetRedis(rdb, "idn", "Inisialisasi", 0)
 
 	gocron.Start()
-	gocron.Every(10).Seconds().Do(c.Task)
+	gocron.Every(3600).Seconds().Do(c.Task)
 
 	//cors
 	corsHandler := cors.New(cors.Options{

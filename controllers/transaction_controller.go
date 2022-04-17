@@ -26,7 +26,7 @@ func StatusManagement(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, errQuery := db.Exec("UPDATE transaction SET status=? WHERE id_transaction=?", status, idTransaction)
+	result, errQuery := db.Exec("UPDATE transactions SET status=? WHERE id_transaction=?", status, idTransaction)
 	if errQuery != nil {
 		PrintError(400, "Table Not Found", w)
 		return
