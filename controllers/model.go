@@ -1,7 +1,5 @@
 package controllers
 
-import "time"
-
 // Error Success
 type ErrorResponse struct {
 	Status  int    `json:"status"`
@@ -94,12 +92,12 @@ type DetailedCart struct {
 
 // Transaction
 type Transaction struct {
-	Id_Transaction int       `json:"id_transaction"`
-	Id_User        int       `json:"id_user"`
-	Id_Promo       int       `json:"id_promo"`
-	Status         string    `json:"status"`
-	Total          int       `json:"total"`
-	Date           time.Time `json:"date"`
+	Id_Transaction int    `json:"id_transaction"`
+	Id_User        int    `json:"id_user"`
+	Id_Promo       int    `json:"id_promo"`
+	Status         string `json:"status"`
+	Total          int    `json:"total"`
+	Date           string `json:"date"`
 }
 
 type TransactionResponse struct {
