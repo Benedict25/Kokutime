@@ -103,7 +103,7 @@ func UpdatePromoCode(w http.ResponseWriter, r *http.Request) {
 	_, errQuery := db.Exec("UPDATE promos SET minimal_purchase=?, promo_amount=?, quantity=? WHERE id_promo=?", minimalPurchase, promoAmmount, quantity, idPromoCode)
 
 	if errQuery == nil {
-		PrintSuccess(200, "PromoCode Deleted", w)
+		PrintSuccess(200, "PromoCode Updated", w)
 	} else {
 		PrintError(400, "Update PromoCode Failed", w)
 	}
