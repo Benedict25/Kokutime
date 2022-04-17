@@ -130,14 +130,16 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	} else if totalPrice > minimalPurchase { // Checkout Success
 		// Create new transaction
 		if len(id_promo) > 0 { // Inserted promo code in form
-			db.Exec(`
+			_, err := db.Exec(`
 			INSERT INTO transactions(id_user, id_promo, status, date) 
 			VALUES(?, ?, ?, ?)`, GetOnlineUserId(r), id_promo, "Processing", currentTime.Format("2006-01-02"))
+			CheckError(err)
 
-			db.Exec(`
+			_, err2 := db.Exec(`
 			UPDATE promos 
 			SET quantity = quantity - 1 
 			WHERE id_promo = ?`, id_promo) // Reduce promo quantity
+			CheckError(err2)
 		} else {
 			db.Exec(`
 			INSERT INTO transactions(id_user, id_promo, status, date) 
