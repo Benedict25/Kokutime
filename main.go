@@ -29,17 +29,17 @@ func main() {
 	router.HandleFunc("/register", c.UserRegister).Methods("POST")
 
 	// Login Endpoint
-	router.HandleFunc("/login/user", c.UserLogin).Methods("POST")
-	router.HandleFunc("/login/admin", c.AdminLogin).Methods("POST")
+	router.HandleFunc("/login-user", c.UserLogin).Methods("POST")
+	router.HandleFunc("/login-admin", c.AdminLogin).Methods("POST")
 
 	// Logout Endpoint
 	router.HandleFunc("/logout", c.Logout).Methods("POST")
 
 	// User Endpoint
 	router.HandleFunc("/user", c.UpdateUser).Methods("PUT")
-	router.HandleFunc("/user/basic", c.Authenticate(c.GetUserProfile, 1)).Methods("GET")
-	router.HandleFunc("/user/admin", c.Authenticate(c.SeeUsers, 0)).Methods("GET")
-	router.HandleFunc("/user/admin", c.Authenticate(c.DeleteUser, 0)).Methods("DELETE")
+	router.HandleFunc("/user-basic", c.Authenticate(c.GetUserProfile, 1)).Methods("GET")
+	router.HandleFunc("/user-admin", c.Authenticate(c.SeeUsers, 0)).Methods("GET")
+	router.HandleFunc("/user-admin", c.Authenticate(c.DeleteUser, 0)).Methods("DELETE")
 
 	// Drink Endpoint
 	router.HandleFunc("/drink", c.GetDrinks).Methods("GET")
@@ -56,10 +56,10 @@ func main() {
 	router.HandleFunc("/promo", c.Authenticate(c.UpdatePromoCode, 0)).Methods("PUT")
 
 	// Transaction Endpoint
-	router.HandleFunc("/transaction/admin", c.Authenticate(c.SalesReport, 0)).Methods("GET")
-	router.HandleFunc("/transaction/admin", c.Authenticate(c.StatusManagement, 0)).Methods("PUT")
-	router.HandleFunc("/transaction/basic", c.Authenticate(c.SeeOrder, 1)).Methods("GET")
-	router.HandleFunc("/detail/transaction/basic", c.Authenticate(c.SeeDetailOrder, 1)).Methods("GET")
+	router.HandleFunc("/transaction-admin", c.Authenticate(c.SalesReport, 0)).Methods("GET")
+	router.HandleFunc("/transaction-admin", c.Authenticate(c.StatusManagement, 0)).Methods("PUT")
+	router.HandleFunc("/transaction-basic", c.Authenticate(c.SeeOrder, 1)).Methods("GET")
+	router.HandleFunc("/detail-transaction-basic", c.Authenticate(c.SeeDetailOrder, 1)).Methods("GET")
 
 	// Cart Endpoint
 	router.HandleFunc("/cart", c.Authenticate(c.SeeCart, 1)).Methods("GET")
