@@ -36,11 +36,10 @@ func main() {
 	router.HandleFunc("/logout", c.Logout).Methods("POST")
 
 	// User Endpoint
-	router.HandleFunc("/user/admin", c.Authenticate(c.SeeUsers, 0)).Methods("GET")
-	router.HandleFunc("/user/admin", c.Authenticate(c.UpdateUser, 0)).Methods("PUT")
-	router.HandleFunc("/user/admin", c.Authenticate(c.DeleteUser, 0)).Methods("DELETE")
+	router.HandleFunc("/user", c.UpdateUser).Methods("PUT")
 	router.HandleFunc("/user/basic", c.Authenticate(c.GetUserProfile, 1)).Methods("GET")
-	router.HandleFunc("/user/basic", c.Authenticate(c.EditProfile, 1)).Methods("PUT")
+	router.HandleFunc("/user/admin", c.Authenticate(c.SeeUsers, 0)).Methods("GET")
+	router.HandleFunc("/user/admin", c.Authenticate(c.DeleteUser, 0)).Methods("DELETE")
 
 	// Drink Endpoint
 	router.HandleFunc("/drink", c.GetDrinks).Methods("GET")

@@ -27,30 +27,3 @@ func GetUserProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-func EditProfile(w http.ResponseWriter, r *http.Request) {
-	db := connect()
-	defer db.Close()
-
-	err := r.ParseForm()
-	CheckError(err)
-
-	Name := r.Form.Get("name")
-	Address := r.Form.Get("address")
-	Email := r.Form.Get("email")
-	Password := r.Form.Get("password")
-
-	_, errQuery := db.Exec("UPDATE users SET name = ?, address = ?, email = ?, password = ? WHERE id_user = ?",
-		Name,
-		Address,
-		Email,
-		Password,
-		GetOnlineUserId(r))
-
-	if errQuery == nil {
-		PrintSuccess(200, "Profile Updated", w)
-	} else {
-		PrintError(400, "Update Profile Failed", w)
-		return
-	}
-}
